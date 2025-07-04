@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { QrCode, Share, Edit, User } from "lucide-react";
+import { QrCode, Share, Edit, User, Linkedin, Instagram, MessageCircle, DollarSign } from "lucide-react";
 
 interface CardData {
   name: string;
@@ -12,6 +12,16 @@ interface CardData {
   company: string;
   email: string;
   phone: string;
+  socialHandles: {
+    linkedin: string;
+    instagram: string;
+    meta: string;
+    x: string;
+  };
+  paymentModes: {
+    paypal: string;
+    venmo: string;
+  };
 }
 
 export const CardBuilder = () => {
@@ -20,13 +30,37 @@ export const CardBuilder = () => {
     title: "Senior Product Manager",
     company: "TechCorp Inc.",
     email: "john.doe@techcorp.com",
-    phone: "+1 (555) 123-4567"
+    phone: "+1 (555) 123-4567",
+    socialHandles: {
+      linkedin: "@johndoe",
+      instagram: "@john.doe",
+      meta: "@johndoe",
+      x: "@johndoe"
+    },
+    paymentModes: {
+      paypal: "@johndoe",
+      venmo: "@john-doe"
+    }
   });
 
   const [isEditing, setIsEditing] = useState(false);
 
   const updateCardData = (field: keyof CardData, value: string) => {
     setCardData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updateSocialHandle = (platform: keyof CardData['socialHandles'], value: string) => {
+    setCardData(prev => ({
+      ...prev,
+      socialHandles: { ...prev.socialHandles, [platform]: value }
+    }));
+  };
+
+  const updatePaymentMode = (mode: keyof CardData['paymentModes'], value: string) => {
+    setCardData(prev => ({
+      ...prev,
+      paymentModes: { ...prev.paymentModes, [mode]: value }
+    }));
   };
 
   return (
@@ -61,9 +95,24 @@ export const CardBuilder = () => {
             </div>
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-2 mb-4">
             <p className="text-white/90 text-sm">{cardData.email}</p>
             <p className="text-white/90 text-sm">{cardData.phone}</p>
+          </div>
+          
+          {/* Social Handles */}
+          <div className="flex items-center gap-3 mb-3">
+            <Linkedin className="w-4 h-4" />
+            <Instagram className="w-4 h-4" />
+            <MessageCircle className="w-4 h-4" />
+            <span className="text-xs text-white/70">@{cardData.socialHandles.x}</span>
+          </div>
+          
+          {/* Payment Methods */}
+          <div className="flex items-center gap-3">
+            <DollarSign className="w-4 h-4" />
+            <span className="text-xs text-white/70">PayPal: {cardData.paymentModes.paypal}</span>
+            <span className="text-xs text-white/70">Venmo: {cardData.paymentModes.venmo}</span>
           </div>
         </div>
       </Card>
@@ -118,6 +167,80 @@ export const CardBuilder = () => {
                 onChange={(e) => updateCardData('phone', e.target.value)}
                 className="mt-1"
               />
+            </div>
+            
+            {/* Social Handles Section */}
+            <div className="pt-4 border-t">
+              <h4 className="font-medium mb-3">Social Handles</h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="linkedin">LinkedIn</Label>
+                  <Input
+                    id="linkedin"
+                    value={cardData.socialHandles.linkedin}
+                    onChange={(e) => updateSocialHandle('linkedin', e.target.value)}
+                    placeholder="@username"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="instagram">Instagram</Label>
+                  <Input
+                    id="instagram"
+                    value={cardData.socialHandles.instagram}
+                    onChange={(e) => updateSocialHandle('instagram', e.target.value)}
+                    placeholder="@username"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="meta">Meta</Label>
+                  <Input
+                    id="meta"
+                    value={cardData.socialHandles.meta}
+                    onChange={(e) => updateSocialHandle('meta', e.target.value)}
+                    placeholder="@username"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="x">X (Twitter)</Label>
+                  <Input
+                    id="x"
+                    value={cardData.socialHandles.x}
+                    onChange={(e) => updateSocialHandle('x', e.target.value)}
+                    placeholder="@username"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Payment Modes Section */}
+            <div className="pt-4 border-t">
+              <h4 className="font-medium mb-3">Payment Methods</h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="paypal">PayPal</Label>
+                  <Input
+                    id="paypal"
+                    value={cardData.paymentModes.paypal}
+                    onChange={(e) => updatePaymentMode('paypal', e.target.value)}
+                    placeholder="@username"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="venmo">Venmo</Label>
+                  <Input
+                    id="venmo"
+                    value={cardData.paymentModes.venmo}
+                    onChange={(e) => updatePaymentMode('venmo', e.target.value)}
+                    placeholder="@username"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </Card>
