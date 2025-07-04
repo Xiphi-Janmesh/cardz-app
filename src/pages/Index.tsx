@@ -1,12 +1,44 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { WelcomeScreen } from "@/components/WelcomeScreen";
+import { CardBuilder } from "@/components/CardBuilder";
+import { Navigation } from "@/components/Navigation";
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState("welcome");
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "welcome":
+        return <WelcomeScreen />;
+      case "cards":
+        return <CardBuilder />;
+      case "contacts":
+        return (
+          <div className="min-h-screen bg-background flex items-center justify-center p-6">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-2">Contacts</h2>
+              <p className="text-muted-foreground">Manage your network connections</p>
+            </div>
+          </div>
+        );
+      case "settings":
+        return (
+          <div className="min-h-screen bg-background flex items-center justify-center p-6">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-2">Settings</h2>
+              <p className="text-muted-foreground">Customize your experience</p>
+            </div>
+          </div>
+        );
+      default:
+        return <WelcomeScreen />;
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="relative">
+      {renderContent()}
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
 };
