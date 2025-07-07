@@ -183,17 +183,18 @@ export const ContactsList = () => {
                   </div>
                 </div>
               </div>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => setSelectedContact(contact)}
-                  >
-                    View CRM Details
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+              <div className="flex flex-col gap-2">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedContact(contact)}
+                    >
+                      View CRM Details
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-3">
                       <Avatar className="w-10 h-10">
@@ -350,7 +351,16 @@ export const ContactsList = () => {
                     </div>
                   </div>
                 </DialogContent>
-              </Dialog>
+                </Dialog>
+                <Button variant="outline" size="sm">
+                  <Mic className="w-4 h-4 mr-2" />
+                  Record Context
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Hear Context
+                </Button>
+              </div>
             </div>
           </Card>
         ))}
