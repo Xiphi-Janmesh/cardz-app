@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { User, Building, Mail, Phone, Calendar, MapPin } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { User, Building, Mail, Phone, Calendar as CalendarIcon, MapPin, Mic, MicOff, CalendarPlus } from "lucide-react";
+import { format } from "date-fns";
 
 interface Contact {
   id: string;
@@ -96,6 +102,10 @@ const sampleContacts: Contact[] = [
 
 export const ContactsList = () => {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [followUpDate, setFollowUpDate] = useState<Date>();
+  const [followUpNotes, setFollowUpNotes] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingText, setRecordingText] = useState("");
 
   const getLeadScoreColor = (score: number) => {
     if (score >= 80) return "bg-green-500";
@@ -156,7 +166,7 @@ export const ContactsList = () => {
                       {contact.location}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
+                      <CalendarIcon className="w-3 h-3" />
                       {contact.lastInteraction}
                     </span>
                   </div>
@@ -255,6 +265,74 @@ export const ContactsList = () => {
                       </Card>
                     </div>
 
+                    {/* Recording Section */}
+                    <div>
+                      <h4 className="font-semibold mb-3">Context Recording</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant={isRecording ? "destructive" : "outline"}
+                            size="sm"
+                            onClick={() => setIsRecording(!isRecording)}
+                          >
+                            {isRecording ? <MicOff className="w-4 h-4 mr-2" /> : <Mic className="w-4 h-4 mr-2" />}
+                            {isRecording ? "Stop Recording" : "Start Recording"}
+                          </Button>
+                          {isRecording && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                              Recording...
+                            </div>
+                          )}
+                        </div>
+                        <Textarea
+                          placeholder="Recording transcription will appear here or add manual notes..."
+                          value={recordingText}
+                          onChange={(e) => setRecordingText(e.target.value)}
+                          className="min-h-[80px]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Follow-up Calendar */}
+                    <div>
+                      <h4 className="font-semibold mb-3">Schedule Follow-up</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                <CalendarPlus className="w-4 h-4 mr-2" />
+                                {followUpDate ? format(followUpDate, "PPP") : "Select date"}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={followUpDate}
+                                onSelect={setFollowUpDate}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <div>
+                          <Label htmlFor="followUpNotes">Follow-up Notes</Label>
+                          <Textarea
+                            id="followUpNotes"
+                            placeholder="Add notes for follow-up reminder..."
+                            value={followUpNotes}
+                            onChange={(e) => setFollowUpNotes(e.target.value)}
+                            className="mt-1"
+                          />
+                        </div>
+                        <Button size="sm" className="w-full">
+                          <CalendarIcon className="w-4 h-4 mr-2" />
+                          Schedule Follow-up Reminder
+                        </Button>
+                      </div>
+                    </div>
+
                     {/* Action Buttons */}
                     <div className="flex gap-3">
                       <Button size="sm" className="flex-1">
@@ -262,7 +340,7 @@ export const ContactsList = () => {
                         Send Email
                       </Button>
                       <Button variant="outline" size="sm" className="flex-1">
-                        <Calendar className="w-4 h-4 mr-2" />
+                        <CalendarIcon className="w-4 h-4 mr-2" />
                         Schedule Meeting
                       </Button>
                       <Button variant="outline" size="sm" className="flex-1">
