@@ -188,11 +188,7 @@ export const CardBuilder = () => {
             </Card>
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-3">
-              <Button size="lg" className="h-12">
-                <QrCode className="w-5 h-5 mr-2" />
-                Generate QR Code
-              </Button>
+            <div className="flex justify-center">
               <Button variant="minimal" size="lg" className="h-12">
                 <Share className="w-5 h-5 mr-2" />
                 Share {card.type} Card
