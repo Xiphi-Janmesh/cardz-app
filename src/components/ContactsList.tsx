@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { User, Building, Mail, Phone, Calendar as CalendarIcon, MapPin, Mic, MicOff, CalendarPlus } from "lucide-react";
+import { User, Building, Mail, Phone, Calendar as CalendarIcon, MapPin, Mic, MicOff, CalendarPlus, Search } from "lucide-react";
 import { format } from "date-fns";
 
 interface Contact {
@@ -106,6 +106,23 @@ export const ContactsList = () => {
   const [followUpNotes, setFollowUpNotes] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [recordingText, setRecordingText] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredContacts = sampleContacts.filter(contact => {
+    if (!searchTerm) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      contact.name.toLowerCase().includes(searchLower) ||
+      contact.title.toLowerCase().includes(searchLower) ||
+      contact.company.toLowerCase().includes(searchLower) ||
+      contact.email.toLowerCase().includes(searchLower) ||
+      contact.industry.toLowerCase().includes(searchLower) ||
+      contact.location.toLowerCase().includes(searchLower) ||
+      contact.notes.toLowerCase().includes(searchLower) ||
+      contact.tags.some(tag => tag.toLowerCase().includes(searchLower))
+    );
+  });
 
   const getLeadScoreColor = (score: number) => {
     if (score >= 80) return "bg-green-500";
@@ -131,12 +148,25 @@ export const ContactsList = () => {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-foreground">My Contacts</h1>
         <div className="text-sm text-muted-foreground">
-          {sampleContacts.length} contacts
+          {filteredContacts.length} contacts
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search contacts by name, company, tags, notes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
         </div>
       </div>
 
       <div className="space-y-4">
-        {sampleContacts.map((contact) => (
+        {filteredContacts.map((contact) => (
           <Card key={contact.id} className="p-4 shadow-card">
             <div className="flex items-start justify-between">
               <div className="flex items-start space-x-4">
